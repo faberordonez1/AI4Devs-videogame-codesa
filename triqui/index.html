@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tres en Raya</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+    <div id="configuracion" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4">Configuración del Juego</h1>
+        <form id="formularioConfiguracion" class="space-y-4">
+            <div>
+                <label for="jugadorUno" class="block text-sm font-medium">Nombre del Jugador 1</label>
+                <input type="text" id="jugadorUno" name="jugadorUno" class="mt-1 p-2 w-full bg-gray-700 rounded" required>
+            </div>
+            <div>
+                <label for="jugadorDos" class="block text-sm font-medium">Nombre del Jugador 2</label>
+                <input type="text" id="jugadorDos" name="jugadorDos" class="mt-1 p-2 w-full bg-gray-700 rounded" required>
+            </div>
+            <div>
+                <label for="partidas" class="block text-sm font-medium">Número de Partidas</label>
+                <input type="number" id="partidas" name="partidas" class="mt-1 p-2 w-full bg-gray-700 rounded" min="1" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Iniciar Juego
+            </button>
+        </form>
+    </div>
+
+    <div id="juego" class="hidden bg-gray-800 p-6 rounded-lg shadow-lg mt-6">
+        <h2 class="text-xl font-bold mb-4">Tres en Raya</h2>
+        <div class="grid grid-cols-3 gap-2">
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="0"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="1"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="2"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="3"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="4"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="5"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="6"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="7"></div>
+            <div class="celda w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer" data-index="8"></div>
+        </div>
+        <div class="mt-4">
+            <p id="turnoActual" class="text-lg"></p>
+            <p id="partidasRestantes" class="text-lg"></p>
+            <p id="marcador" class="text-lg"></p>
+        </div>
+        <button id="siguientePartida" class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded hidden">
+            Siguiente Partida
+        </button>
+    </div>
+
+    <div id="modalFinal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+            <h2 id="ganadorFinal" class="text-2xl font-bold mb-4"></h2>
+            <button id="reiniciarJuego" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Reiniciar Juego
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
