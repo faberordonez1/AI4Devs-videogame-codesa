@@ -9,11 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const siguientePartida = document.getElementById('siguientePartida');
     const ganadorFinal = document.getElementById('ganadorFinal');
     const reiniciarJuego = document.getElementById('reiniciarJuego');
+    const botonoIniciarJuego = document.getElementById('inciarBtn');
     const celdas = document.querySelectorAll('.celda');
 
     let jugadorUno, jugadorDos, partidasTotales, partidasJugadas, partidasGanadasUno, partidasGanadasDos, turno, tablero;
 
-    formularioConfiguracion.addEventListener('submit', (e) => {
+    botonoIniciarJuego.addEventListener('click', (e) => {
         e.preventDefault();
         jugadorUno = document.getElementById('jugadorUno').value;
         jugadorDos = document.getElementById('jugadorDos').value;
