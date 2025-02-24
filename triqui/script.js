@@ -1,94 +1,130 @@
-// Variables globales
-let tablero = ["", "", "", "", "", "", "", "", ""]; // Representa el estado del tablero
-let jugadorActual = "X"; // Jugador 1 usa 'X', Jugador 2 usa 'O'
-let juegoActivo = true; // Controla si el juego está en curso
+document.addEventListener('DOMContentLoaded', () => {
+    const configuracion = document.getElementById('configuracion');
+    const juego = document.getElementById('juego');
+    const modalFinal = document.getElementById('modalFinal');
+    const formularioConfiguracion = document.getElementById('formularioConfiguracion');
+    const turnoActual = document.getElementById('turnoActual');
+    const partidasRestantes = document.getElementById('partidasRestantes');
+    const marcador = document.getElementById('marcador');
+    const siguientePartida = document.getElementById('siguientePartida');
+    const ganadorFinal = document.getElementById('ganadorFinal');
+    const reiniciarJuego = document.getElementById('reiniciarJuego');
+    const celdas = document.querySelectorAll('.celda');
 
-// Combinaciones ganadoras
-const combinacionesGanadoras = [
-  [0, 1, 2], // Fila superior
-  [3, 4, 5], // Fila media
-  [6, 7, 8], // Fila inferior
-  [0, 3, 6], // Columna izquierda
-  [1, 4, 7], // Columna central
-  [2, 5, 8], // Columna derecha
-  [0, 4, 8], // Diagonal principal
-  [2, 4, 6]  // Diagonal secundaria
-];
+    let jugadorUno, jugadorDos, partidasTotales, partidasJugadas, partidasGanadasUno, partidasGanadasDos, turno, tablero;
 
-// Elementos del DOM
-const tableroHTML = document.getElementById("tablero");
-const mensajeHTML = document.getElementById("mensaje");
-const reiniciarHTML = document.getElementById("reiniciar");
+    formularioConfiguracion.addEventListener('submit', (e) => {
+        e.preventDefault();
+        jugadorUno = document.getElementById('jugadorUno').value;
+        jugadorDos = document.getElementById('jugadorDos').value;
+        partidasTotales = parseInt(document.getElementById('partidas').value);
+        partidasJugadas = 0;
+        partidasGanadasUno = 0;
+        partidasGanadasDos = 0;
+        configuracion.classList.add('hidden');
+        juego.classList.remove('hidden');
+        iniciarPartida();
+    });
 
-// Función para inicializar el juego
-function iniciarJuego() {
-  tablero = ["", "", "", "", "", "", "", "", ""];
-  jugadorActual = "X";
-  juegoActivo = true;
-  mensajeHTML.textContent = `Turno del Jugador ${jugadorActual}`;
-  renderizarTablero();
-}
+    function iniciarPartida() {
+        tablero = Array(9).fill(null);
+        turno = 'X';
+        actualizarInterfaz();
+        celdas.forEach(celda => {
+            celda.textContent = '';
+            celda.classList.remove('bg-green-500');
+            celda.addEventListener('click', manejarClickCelda, { once: true });
+        });
+    }
 
-// Función para renderizar el tablero
-function renderizarTablero() {
-  tableroHTML.innerHTML = ""; // Limpiar el tablero
-  tablero.forEach((celda, indice) => {
-    const divCelda = document.createElement("div");
-    divCelda.classList.add(
-      "w-20",
-      "h-20",
-      "flex",
-      "items-center",
-      "justify-center",
-      "text-3xl",
-      "font-bold",
-      "bg-gray-800",
-      "cursor-pointer",
-      "hover:bg-gray-700",
-      "rounded"
-    );
-    divCelda.textContent = celda;
-    divCelda.addEventListener("click", () => manejarClic(indice));
-    tableroHTML.appendChild(divCelda);
-  });
-}
+    function manejarClickCelda(e) {
+        const celda = e.target;
+        const index = celda.dataset.index;
+        tablero[index] = turno;
+        celda.textContent = turno;
+        if (verificarGanador()) {
+            finalizarPartida();
+            return;
+        }
+        if (tablero.every(celda => celda !== null)) {
+            finalizarPartida(true);
+            return;
+        }
+        turno = turno === 'X' ? 'O' : 'X';
+        actualizarInterfaz();
+    }
 
-// Función para manejar el clic en una celda
-function manejarClic(indice) {
-  if (tablero[indice] !== "" || !juegoActivo) return;
+    function verificarGanador() {
+        const lineasGanadoras = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Filas
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columnas
+            [0, 4, 8], [2, 4, 6]             // Diagonales
+        ];
+        for (const linea of lineasGanadoras) {
+            const [a, b, c] = linea;
+            if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
+                resaltarLineaGanadora(linea);
+                return true;
+            }
+        }
+        return false;
+    }
 
-  // Marcar la celda con el símbolo del jugador actual
-  tablero[indice] = jugadorActual;
-  renderizarTablero();
+    function resaltarLineaGanadora(linea) {
+        linea.forEach(index => {
+            celdas[index].classList.add('bg-green-500');
+        });
+    }
 
-  // Verificar si hay un ganador o empate
-  if (verificarGanador()) {
-    mensajeHTML.textContent = `¡Jugador ${jugadorActual} ha ganado!`;
-    juegoActivo = false;
-    return;
-  }
+    function finalizarPartida(empate = false) {
+        if (empate) {
+            turnoActual.textContent = '¡Empate!';
+        } else {
+            const ganador = turno === 'X' ? jugadorUno : jugadorDos;
+            turnoActual.textContent = `¡${ganador} gana la partida! 🏆`;
+            if (turno === 'X') {
+                partidasGanadasUno++;
+            } else {
+                partidasGanadasDos++;
+            }
+        }
+        partidasJugadas++;
+        actualizarInterfaz();
+        siguientePartida.classList.remove('hidden');
+    }
 
-  if (tablero.every((celda) => celda !== "")) {
-    mensajeHTML.textContent = "¡Es un empate!";
-    juegoActivo = false;
-    return;
-  }
+    function actualizarInterfaz() {
+        const jugadorActual = turno === 'X' ? jugadorUno : jugadorDos;
+        turnoActual.textContent = `Turno de: ${jugadorActual}`;
+        partidasRestantes.textContent = `Partidas restantes: ${partidasTotales - partidasJugadas}`;
+        marcador.textContent = `Marcador: ${jugadorUno} ${partidasGanadasUno} - ${partidasGanadasDos} ${jugadorDos}`;
+    }
 
-  // Cambiar al siguiente jugador
-  jugadorActual = jugadorActual === "X" ? "O" : "X";
-  mensajeHTML.textContent = `Turno del Jugador ${jugadorActual}`;
-}
+    siguientePartida.addEventListener('click', () => {
+        if (partidasJugadas < partidasTotales) {
+            iniciarPartida();
+            siguientePartida.classList.add('hidden');
+        } else {
+            finalizarJuego();
+        }
+    });
 
-// Función para verificar si hay un ganador
-function verificarGanador() {
-  return combinacionesGanadoras.some((combinacion) => {
-    const [a, b, c] = combinacion;
-    return tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c];
-  });
-}
+    function finalizarJuego() {
+        let ganador;
+        if (partidasGanadasUno > partidasGanadasDos) {
+            ganador = jugadorUno;
+        } else if (partidasGanadasDos > partidasGanadasUno) {
+            ganador = jugadorDos;
+        } else {
+            ganador = 'Empate';
+        }
+        ganadorFinal.textContent = ganador === 'Empate' ? '¡Empate!' : `¡${ganador} gana el juego! 🏆`;
+        modalFinal.classList.remove('hidden');
+    }
 
-// Evento para reiniciar el juego
-reiniciarHTML.addEventListener("click", iniciarJuego);
-
-// Iniciar el juego al cargar la página
-iniciarJuego();
+    reiniciarJuego.addEventListener('click', () => {
+        modalFinal.classList.add('hidden');
+        juego.classList.add('hidden');
+        configuracion.classList.remove('hidden');
+    });
+});
