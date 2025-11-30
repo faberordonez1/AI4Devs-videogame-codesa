@@ -85,14 +85,14 @@ Los elementos visuales se representan exclusivamente con **emojis**, lo cual sim
 
 # 🗺️ Diseño del Nivel (Matriz de Emojis)
 
-El mapa se representa como **un arreglo de strings**, donde cada fila contiene emojis que indican elementos del nivel:
+Mapa de ejemplo donde cada fila contiene emojis que indican elementos del nivel:
 
 ```plaintext
 "                        ",
 "                        ",
 "        🪙              ",
 "      🟦🟦              ",
-"   👾                🏁 ",
+"🧍‍♂️  👾                🏁 ",
 "🟫🟫🟫🟫🟫🟫🟫🟫🟫🟫🟫🟫🟫"
 ```
 
@@ -159,6 +159,12 @@ Cada símbolo tiene su significado y colisión asociada.
 - **Guardar progreso** en `localStorage`.
 
 ---
+
+# Tecnologias
+- HTML
+- Tailwind CSS CDN
+- JavaScript
+- Accion cuando hay un ganador  https://www.npmjs.com/package/js-confetti
 
 # 🏁 Conclusión
 Este diseño funcional te permite crear un **juego de plataformas completo**, con una estética ligera basada en **emojis**, sin necesidad de gráficos externos ni canvas avanzados.  
